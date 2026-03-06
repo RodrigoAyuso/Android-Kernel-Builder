@@ -135,10 +135,13 @@ jobs:
           
           cat ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
 
-      - name: "💉 Cirurgia no Código (Fix Errors)"
+      - name: "🛡️ Kill MTK Debug Object"
         working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
         run: |
-           sed -i '/cpu_util_rt(cpu_rq(cpu))/s/^/\/\//' kernel/sched/extension/debug.c    
+          sed -i 's/obj-y += debug.o//g' kernel/sched/extension/Makefile
+    
+          echo "/* Desativado para evitar erros de compilação */" > kernel/sched/extension/debug.c
+          echo "Objeto de debug removido do ciclo de build."
 
       - name: "👍 Make defconfig"
         working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
