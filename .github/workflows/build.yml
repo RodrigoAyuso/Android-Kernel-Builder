@@ -135,6 +135,11 @@ jobs:
           
           cat ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
 
+      - name: "💉 Cirurgia no Código (Fix Errors)"
+        working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
+        run: |
+           sed -i '/cpu_util_rt(cpu_rq(cpu))/s/^/\/\//' kernel/sched/extension/debug.c    
+
       - name: "👍 Make defconfig"
         working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
         env:
