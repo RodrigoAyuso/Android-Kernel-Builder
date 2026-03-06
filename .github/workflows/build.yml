@@ -58,6 +58,12 @@ jobs:
         working-directory: ./${{ env.kernelDir }}
         run: |
           git clone --recursive --branch $kernelBranch $kernelRepo $kernelName --depth=1
+ 
+      - name: "🛠️ Fix MTK Sched Debug Error"
+        working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
+        run: |
+          echo "/* Esvaziado para corrigir erro de compilação */" > kernel/sched/extension/debug.c
+          echo "Desativando debug.c problemático para permitir modo Performance..."
 
       - name: "💫 Get toolchains"
         working-directory: ./${{ env.kernelDir }}
