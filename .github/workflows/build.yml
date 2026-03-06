@@ -132,17 +132,7 @@ jobs:
           echo "CONFIG_HZ_300=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_HZ=300" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_MTK_PERFMGR_TOUCH_BOOST=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
-          
           cat ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
-
-      - name: "🛡️ Cirurgia de Performance (Fix MTK Errors)"
-        working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
-        run: |
-          sed -i 's/obj-y += debug.o//g' kernel/sched/extension/Makefile
-          echo "/* Anulado */" > kernel/sched/extension/debug.c
-          sed -i 's/if (!pod_is_ready())/\/\/ if (!pod_is_ready())/g' kernel/sched/fair.c
-          sed -i 's/list_for_each(pos, &perf_order_domains)/\/\/ list_for_each(pos, \&perf_order_domains)/g' kernel/sched/fair.c
-          echo "Cirurgia concluída com sucesso."
 
       - name: "👍 Make defconfig"
         working-directory: ./${{ env.kernelDir }}/${{ env.kernelName }}
