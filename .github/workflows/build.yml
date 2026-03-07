@@ -84,7 +84,7 @@ jobs:
           params: "${{ toJSON(matrix.repos.params) }}"
         run: |
           ARCH=$(echo $params | jq -r ".ARCH")
-          # Captura as ferramentas LLVM/Clang
+          # LLVM/Clang
           CC=$(echo $params | jq -r ".CC")
           LD=$(echo $params | jq -r ".LD")
           AR=$(echo $params | jq -r ".AR")
@@ -92,15 +92,22 @@ jobs:
           OBJCOPY=$(echo $params | jq -r ".OBJCOPY")
           
           echo "ARCH=$ARCH" >> $GITHUB_ENV
-
+          
+          # LOCALVERSION (4.19.191-g4bri3ldll)
+          # BUILD_USER e HOST "@"
           args="-j$(nproc --all) O=$(pwd)/${{ env.OUT_DIR }} ARCH=$ARCH"
+          args="$args LOCALVERSION=-g4bri3ldll"
+          args="$args KBUILD_BUILD_USER=g4bri3ldll"
+          args="$args KBUILD_BUILD_HOST=hawaiip-dev"
+          # ------------------------------------
+
           [ -n "$CC" ] && args="$args CC=$CC"
           [ -n "$LD" ] && args="$args LD=$LD"
           [ -n "$AR" ] && args="$args AR=$AR"
           [ -n "$NM" ] && args="$args NM=$NM"
           [ -n "$OBJCOPY" ] && args="$args OBJCOPY=$OBJCOPY"
           
-          # Mantém os triples e cross-compilers
+          # triples, cross-compilers
           args="$args CLANG_TRIPLE=$(echo $params | jq -r ".CLANG_TRIPLE")"
           args="$args CROSS_COMPILE=$(echo $params | jq -r ".CROSS_COMPILE")"
           args="$args CROSS_COMPILE_ARM32=$(echo $params | jq -r ".CROSS_COMPILE_COMPAT")"
