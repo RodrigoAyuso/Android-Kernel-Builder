@@ -142,6 +142,9 @@ jobs:
           # Ou, se preferir apenas anular o conteúdo do arquivo:
           echo "int ksu_pkg_observer_init() { return 0; }" > drivers/kernelsu/pkg_observer.c
           echo "void ksu_pkg_observer_exit() { }" >> drivers/kernelsu/pkg_observer.c
+          # 1. Corrige o TWA_RESUME no setuid_hook.c
+          sed -i 's/TWA_RESUME/0/g' drivers/kernelsu/setuid_hook.c
+          sed -i 's/ksu_seccomp_allow_cache/\/\/ ksu_seccomp_allow_cache/g' drivers/kernelsu/setuid_hook.c
           
           echo "CONFIG_HAVE_KPROBES=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_KPROBE_EVENTS=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
