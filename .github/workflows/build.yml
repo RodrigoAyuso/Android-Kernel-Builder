@@ -134,7 +134,8 @@ jobs:
           sed -i 's/TWA_RESUME/0/g' drivers/kernelsu/allowlist.c
           sed -i '1i #include <linux/sched.h>' drivers/kernelsu/allowlist.c
           sed -i '1i #include <linux/sched/task.h>' drivers/kernelsu/allowlist.c
-
+          sed -i 's/<linux\/pgtable.h>/<asm\/pgtable.h>/g' drivers/kernelsu/sucompat.c
+          
           echo "CONFIG_HAVE_KPROBES=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_KPROBE_EVENTS=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_TMPFS_XATTR=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
