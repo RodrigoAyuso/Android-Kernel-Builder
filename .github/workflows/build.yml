@@ -135,6 +135,8 @@ jobs:
           sed -i '1i #include <linux/sched.h>' drivers/kernelsu/allowlist.c
           sed -i '1i #include <linux/sched/task.h>' drivers/kernelsu/allowlist.c
           sed -i 's/<linux\/pgtable.h>/<asm\/pgtable.h>/g' drivers/kernelsu/sucompat.c
+          sed -i 's/case __NR_clone3:/#ifdef __NR_clone3\n    case __NR_clone3:\n#endif/g' drivers/kernelsu/syscall_hook_manager.c
+          sed -i 's/id == __NR_clone3/id == -1 \/* clone3 nao existe no 4.19 *\//g' drivers/kernelsu/syscall_hook_manager.c
           
           echo "CONFIG_HAVE_KPROBES=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_KPROBE_EVENTS=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
