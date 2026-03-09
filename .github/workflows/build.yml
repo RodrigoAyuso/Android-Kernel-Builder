@@ -147,6 +147,13 @@ jobs:
           sed -i 's/ksu_seccomp_allow_cache/\/\/ ksu_seccomp_allow_cache/g' drivers/kernelsu/setuid_hook.c
           grep -rli 'TWA_RESUME' drivers/kernelsu/ | xargs -i@ sed -i 's/TWA_RESUME/0/g' @
           sed -i 's/<uapi\/linux\/mount.h>/<linux\/mount.h>/g' drivers/kernelsu/su_mount_ns.c
+          sed -i 's/p->ops.iopoll =/# \0/' drivers/kernelsu/file_wrapper.c
+          sed -i 's/p->ops.remap_file_range =/# \0/' drivers/kernelsu/file_wrapper.c
+          sed -i 's/if (remap_flags & REMAP_FILE_DEDUP)/if (0) \/\/ REMAP_FILE_DEDUP nao existe/g' drivers/kernelsu/file_wrapper.c
+          sed -i '/static int ksu_wrapper_iopoll/,/}/ s/^/\/\//' drivers/kernelsu/file_wrapper.c
+          sed -i '/static loff_t ksu_wrapper_remap_file_range/,/}/ s/^/\/\//' drivers/kernelsu/file_wrapper.c
+          sed -i 's/security_inode_init_security_anon/security_inode_init_security/g' drivers/kernelsu/file_wrapper.c
+          sed -i 's/selinux_inode(/# \0/g' drivers/kernelsu/file_wrapper.c # Desativa a checagem direta de struct selinux
           
           echo "CONFIG_HAVE_KPROBES=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
           echo "CONFIG_KPROBE_EVENTS=y" >> ./arch/${{ env.ARCH }}/configs/${{ env.DEFCONFIG_NAME }}
